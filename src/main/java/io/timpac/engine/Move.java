@@ -3,9 +3,11 @@ package io.timpac.engine;
 import io.timpac.engine.piece.Piece;
 
 public class Move {
-	private final Tile sourceTile;
-	private final Tile destinationTile;
-	private final Piece movedPiece;
+	private Tile sourceTile;
+	private Tile destinationTile;
+	private Piece movedPiece;
+	
+	public final static Move EMPTY_MOVE = new Move(null, null, null);
 	
 	public Move(Tile sourceTile, Tile destinationTile, Piece movedPiece) {
 		this.sourceTile = sourceTile;
@@ -25,7 +27,25 @@ public class Move {
 		return movedPiece;
 	}
 	
+	public void setSourceTile(Tile sourceTile) {
+		this.sourceTile = sourceTile;
+	}
+
+	public void setDestinationTile(Tile destinationTile) {
+		this.destinationTile = destinationTile;
+	}
+
+	public void setMovedPiece(Piece movedPiece) {
+		this.movedPiece = movedPiece;
+	}
+
 	public boolean isFirstMove() {
 		return this.sourceTile == null;
+	}
+	
+	public void clear() {
+		this.sourceTile = null;
+		this.destinationTile = null;
+		this.movedPiece = null;
 	}
 }

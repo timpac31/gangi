@@ -21,6 +21,10 @@ public class Position {
 		return y;
 	}
 	
+	public Position move(int x, int y) {
+		return new Position(this.x + x, this.y + y);
+	}
+	
 	@Override
 	public String toString() {
 		return x + "-" + y;
