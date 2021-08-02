@@ -1,6 +1,7 @@
 package io.timpac.gui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,7 +40,6 @@ public class BoardPanel extends JPanel {
 		
 		addTilePanel();
 		setPreferredSize(BOARD_PANEL_SIZE);
-		setBackground(BACKGROUND_COLOR);
 		validate();
 	}
 
@@ -46,8 +47,28 @@ public class BoardPanel extends JPanel {
 		for(int i=0; i<Uiutils.TOTAL_TILE_SIZE; i++) {
 			final Position currentPosition = Position.of(i % Uiutils.TILE_COLUMN_NUM + 1, i / Uiutils.TILE_COLUMN_NUM + 1); 
 			TilePanel tilePanel = new TilePanel(currentPosition);
-			add(tilePanel);
+			add(tilePanel, i);
 		}
+	}
+	
+	private void clearHighlightBorder() {
+		Component[] components = getComponents();
+		for(int i=0; i<components.length; i++) {
+			if(components[i] instanceof TilePanel) {
+				TilePanel tilePanel = (TilePanel) components[i];
+				if(tilePanel.getComponentCount() > 0) {
+					JLabel pieceIcon = (JLabel) tilePanel.getComponent(0);
+					pieceIcon.setBorder(BorderFactory.createEmptyBorder());
+				}
+			}
+		}
+	}
+	
+	private void tileUpdate() {
+		removeAll();
+		addTilePanel();
+		validate();
+		repaint();
 	}
 	
 	
@@ -68,9 +89,9 @@ public class BoardPanel extends JPanel {
 			
 			validate();
 		}
-
+		
 		@Override
-		protected void paintComponent(Graphics g) {
+		protected void paintBorder(Graphics g) {
 			final Dimension d = getSize();
 			g.setColor(Color.BLACK);
 			g.drawLine(0, d.height/2, d.width, d.height/2);
@@ -94,31 +115,48 @@ public class BoardPanel extends JPanel {
 				public void mouseClicked(MouseEvent e) {
 					if(SwingUtilities.isRightMouseButton(e)) {
 						move.clear();
+						clearHighlightBorder();
 					}else if(SwingUtilities.isLeftMouseButton(e)) {
 						
 						if(move.isFirstMove()) {
 							Tile clickedtile = board.getTile(position);
 							if(clickedtile.hasPiece()) {
+								highlightBorder();
 								move.setSourceTile(clickedtile);
 								move.setMovedPiece(clickedtile.getPiece());
 							}else {
 								move.clear();
+								clearHighlightBorder();
 							}
 						}else {
 							move.setDestinationTile(board.getTile(position));
 							
 							if(move.getMovedPiece().validate(move.getDestinationTile(), board)) {
-								// TODO piece position 변경, tilePanel 변경 redraw
-								System.out.println("validate 통과");
+								//board data update
+								move.getMovedPiece().setPosition(position);
+								board.getTile(position).setPiece(move.getMovedPiece());
+								board.getTile(move.getSourceTile().getPosition()).setPiece(null);
+								
+								System.out.println(board.toString());
+								
+								tileUpdate();
 							}
 							
 							move.clear();
+							clearHighlightBorder();
 						}
 						
 					}// end leftMouseButton
 				}
 			});
 		}
+		
+		private void highlightBorder() {
+			JLabel pieceIcon = (JLabel) getComponent(0);
+			pieceIcon.setBorder(BorderFactory.createLineBorder(Color.blue));
+		}
+		
+		
 		
 	}
 	

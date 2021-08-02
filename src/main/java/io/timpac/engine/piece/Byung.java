@@ -23,9 +23,16 @@ public class Byung extends Piece {
 	
 	private List<Position> getAllMovePosition() {
 		List<Position> result = new ArrayList<>();
-		result.add(this.position.move(1, 0));
-		result.add(this.position.move(-1, 0));
-		result.add(this.position.move(0, -1));
+		
+		if(this.pieceAlience == PieceAlience.CHO) {
+			result.add(this.position.move(1, 0));
+			result.add(this.position.move(-1, 0));
+			result.add(this.position.move(0, -1));
+		}else if(this.pieceAlience == PieceAlience.HAN) {
+			result.add(this.position.move(1, 0));
+			result.add(this.position.move(-1, 0));
+			result.add(this.position.move(0, 1));
+		}
 		
 		return result;
 	}

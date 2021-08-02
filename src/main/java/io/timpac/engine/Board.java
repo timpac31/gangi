@@ -1,12 +1,13 @@
 package io.timpac.engine;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import io.timpac.engine.piece.Byung;
 import io.timpac.engine.piece.Cha;
 import io.timpac.engine.piece.King;
 import io.timpac.engine.piece.Ma;
+import io.timpac.engine.piece.Piece;
 import io.timpac.engine.piece.PieceAlience;
 import io.timpac.engine.piece.Po;
 import io.timpac.engine.piece.Sa;
@@ -15,7 +16,7 @@ import io.timpac.gui.Position;
 import io.timpac.util.Uiutils;
 
 public class Board {
-	private final Map<Position, Tile> tiles = new HashMap<>(Uiutils.TOTAL_TILE_SIZE);
+	private final Map<Position, Tile> tiles = new LinkedHashMap<>(Uiutils.TOTAL_TILE_SIZE);
 	
 	public Board() {
 		createEmptyTiles();
@@ -67,6 +68,25 @@ public class Board {
 	
 	public Tile getTile(Position position) {
 		return this.tiles.get(position);
+	}
+	
+	public Map<Position, Tile> getTiles() {
+		return this.tiles;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		for(int i=0; i<tiles.size(); i++) {
+			Piece curPiece = tiles.get(Position.of(i % Uiutils.TILE_COLUMN_NUM + 1, i / Uiutils.TILE_COLUMN_NUM + 1)).getPiece();
+			sb.append(String.format("%2s", curPiece == null ? "-" : curPiece.name().substring(0,1) ));
+			
+			if((i+1) % Uiutils.TILE_COLUMN_NUM == 0) {
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
 	}
 
 }
