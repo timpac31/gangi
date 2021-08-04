@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import io.timpac.engine.piece.Piece;
 import io.timpac.gui.Position;
+import io.timpac.piece.Piece;
 import io.timpac.util.Uiutils;
 
 public class BoardTest {

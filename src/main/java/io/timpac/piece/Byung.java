@@ -1,4 +1,4 @@
-package io.timpac.engine.piece;
+package io.timpac.piece;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +10,11 @@ import io.timpac.gui.Position;
 public class Byung extends Piece {
 	public Byung(Position position, PieceAlience pieceAlience) {
 		super(position, pieceAlience);
+		this.pieceType = PieceType.BYUNG;
 	}
 	
 	@Override
-	public boolean validate(final Tile destinationTile, final Board board) {
-		if(destinationTile.hasPiece() && destinationTile.getPiece().getPieceAlience() == this.pieceAlience) {
-			return false;
-		}
-		
+	public boolean validatePieceRule(final Tile destinationTile, final Board board) {
 		return getAllMovePosition().contains(destinationTile.getPosition());
 	}
 	

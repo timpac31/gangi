@@ -1,4 +1,4 @@
-package io.timpac.engine.piece;
+package io.timpac.piece;
 
 import io.timpac.engine.Board;
 import io.timpac.engine.Tile;
@@ -8,10 +8,11 @@ public class Cha extends Piece {
 
 	public Cha(Position position, PieceAlience pieceAlience) {
 		super(position, pieceAlience);
+		this.pieceType = PieceType.CHA;
 	}
 	
 	@Override
-	public boolean validate(Tile destinationTile, Board board) {
+	public boolean validatePieceRule(Tile destinationTile, Board board) {
 		Position destinationPosition = destinationTile.getPosition();
 		
 		//대각선 움직임 

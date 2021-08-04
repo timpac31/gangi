@@ -1,6 +1,6 @@
 package io.timpac.engine;
 
-import io.timpac.engine.piece.Piece;
+import io.timpac.piece.Piece;
 
 public class Move {
 	private Tile sourceTile;

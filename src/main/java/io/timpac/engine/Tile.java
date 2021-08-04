@@ -1,7 +1,7 @@
 package io.timpac.engine;
 
-import io.timpac.engine.piece.Piece;
 import io.timpac.gui.Position;
+import io.timpac.piece.Piece;
 
 public class Tile {
 	private final Position position;
@@ -30,5 +30,9 @@ public class Tile {
 	
 	public boolean hasPiece() {
 		return this.piece == null ? false : true;
+	}
+	
+	public boolean isBlank() {
+		return this.piece == null ? true : false;
 	}
 }

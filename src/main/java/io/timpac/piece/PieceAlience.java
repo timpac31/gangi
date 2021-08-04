@@ -1,4 +1,4 @@
-package io.timpac.engine.piece;
+package io.timpac.piece;
 
 public enum PieceAlience {
 	CHO,

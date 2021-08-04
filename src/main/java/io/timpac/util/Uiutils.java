@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.timpac.engine.piece.Piece;
 import io.timpac.gui.Position;
+import io.timpac.piece.Piece;
 
 public class Uiutils {
 	public static final int TOTAL_TILE_SIZE = 90;

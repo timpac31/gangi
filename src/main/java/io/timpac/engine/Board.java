@@ -3,16 +3,16 @@ package io.timpac.engine;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import io.timpac.engine.piece.Byung;
-import io.timpac.engine.piece.Cha;
-import io.timpac.engine.piece.King;
-import io.timpac.engine.piece.Ma;
-import io.timpac.engine.piece.Piece;
-import io.timpac.engine.piece.PieceAlience;
-import io.timpac.engine.piece.Po;
-import io.timpac.engine.piece.Sa;
-import io.timpac.engine.piece.Sang;
 import io.timpac.gui.Position;
+import io.timpac.piece.Byung;
+import io.timpac.piece.Cha;
+import io.timpac.piece.King;
+import io.timpac.piece.Ma;
+import io.timpac.piece.Piece;
+import io.timpac.piece.PieceAlience;
+import io.timpac.piece.Po;
+import io.timpac.piece.Sa;
+import io.timpac.piece.Sang;
 import io.timpac.util.Uiutils;
 
 public class Board {
@@ -67,7 +67,7 @@ public class Board {
 	}
 	
 	public Tile getTile(Position position) {
-		return this.tiles.get(position);
+		return this.tiles.get(position) == null ? new Tile(position, null) : this.tiles.get(position);
 	}
 	
 	public Map<Position, Tile> getTiles() {
