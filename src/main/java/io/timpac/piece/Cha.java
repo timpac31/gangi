@@ -5,7 +5,6 @@ import io.timpac.engine.Tile;
 import io.timpac.gui.Position;
 
 public class Cha extends Piece {
-
 	public Cha(Position position, PieceAlience pieceAlience) {
 		super(position, pieceAlience);
 		this.pieceType = PieceType.CHA;
@@ -17,6 +16,47 @@ public class Cha extends Piece {
 		
 		//대각선 움직임 
 		if(this.position.getX() != destinationPosition.getX() && this.position.getY() != destinationPosition.getY()) {
+			if(this.position.equals(Position.of(4, 1)) || this.position.equals(Position.of(4, 8))) {
+				if(destinationPosition.equals(this.position.move(1, 1))) {
+					return true;
+				}else if(destinationPosition.equals(this.position.move(2, 2)) && board.getTile(this.position.move(1, 1)).isBlank()) {
+					return true;
+				}
+			}
+			
+			if(this.position.equals(Position.of(6, 1)) || this.position.equals(Position.of(6, 8))) {
+				if(destinationPosition.equals(this.position.move(-1, 1))) {
+					return true;
+				}else if(destinationPosition.equals(this.position.move(-2, 2)) && board.getTile(this.position.move(-1, 1)).isBlank()) {
+					return true;
+				}
+			}
+			
+			if(this.position.equals(Position.of(5, 2)) || this.position.equals(Position.of(5, 9))) {
+				if(destinationPosition.equals(this.position.move(-1, -1)) 
+					|| destinationPosition.equals(this.position.move(1, -1))
+					|| destinationPosition.equals(this.position.move(-1, 1))
+					|| destinationPosition.equals(this.position.move(1, 1))) {
+					return true;
+				}
+			}
+			
+			if(this.position.equals(Position.of(4, 3)) || this.position.equals(Position.of(4, 10))) {
+				if(destinationPosition.equals(this.position.move(1, -1))) {
+					return true;
+				}else if(destinationPosition.equals(this.position.move(2, -2)) && board.getTile(this.position.move(1, -1)).isBlank()) {
+					return true;
+				}
+			}
+			
+			if(this.position.equals(Position.of(6, 3)) || this.position.equals(Position.of(6, 10))) {
+				if(destinationPosition.equals(this.position.move(-1, -1))) {
+					return true;
+				}else if(destinationPosition.equals(this.position.move(-2, -2)) && board.getTile(this.position.move(-1, -1)).isBlank()) {
+					return true;
+				}
+			}
+				
 			return false;
 		}
 		

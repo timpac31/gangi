@@ -27,7 +27,7 @@ import io.timpac.util.Uiutils;
 public class BoardPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static final Dimension BOARD_PANEL_SIZE = new Dimension(500, 500);
-	private static final Color BACKGROUND_COLOR = Color.decode("#FFFACD");
+	private static final Color BACKGROUND_COLOR = Color.decode("#fdcf6f");
 	private static final Dimension TILE_PANEL_SIZE = new Dimension(50,50);
 	
 	private final Board board;

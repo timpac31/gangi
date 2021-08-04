@@ -15,6 +15,38 @@ public class Po extends Piece {
 		final Position destinationPosition = destinationTile.getPosition();
 		
 		if(this.position.getX() != destinationPosition.getX() && this.position.getY() != destinationPosition.getY()) {
+			if(this.position.equals(Position.of(4, 1)) || this.position.equals(Position.of(4, 8))) {
+				if(destinationPosition.equals(this.position.move(2, 2)) 
+					&& board.getTile(this.position.move(1, 1)).hasPiece()
+					&& board.getTile(this.position.move(1, 1)).getPiece().getPieceType() != PieceType.PO) {
+					return true;
+				}
+			}
+			
+			if(this.position.equals(Position.of(6, 1)) || this.position.equals(Position.of(6, 8))) {
+				if(destinationPosition.equals(this.position.move(-2, 2)) 
+					&& board.getTile(this.position.move(-1, 1)).hasPiece()
+					&& board.getTile(this.position.move(-1, 1)).getPiece().getPieceType() != PieceType.PO) {
+					return true;
+				}
+			}
+			
+			if(this.position.equals(Position.of(4, 3)) || this.position.equals(Position.of(4, 10))) {
+				if(destinationPosition.equals(this.position.move(2, -2)) 
+					&& board.getTile(this.position.move(1, -1)).hasPiece()
+					&& board.getTile(this.position.move(1, -1)).getPiece().getPieceType() != PieceType.PO) {
+					return true;
+				}
+			}
+			
+			if(this.position.equals(Position.of(6, 3)) || this.position.equals(Position.of(6, 10))) {
+				if(destinationPosition.equals(this.position.move(-2, -2)) 
+					&& board.getTile(this.position.move(-1, -1)).hasPiece()
+					&& board.getTile(this.position.move(-1, -1)).getPiece().getPieceType() != PieceType.PO) {
+					return true;
+				}
+			}
+			
 			return false;
 		}
 		
