@@ -11,6 +11,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -24,7 +26,7 @@ import io.timpac.engine.Move;
 import io.timpac.engine.Tile;
 import io.timpac.util.Uiutils;
 
-public class BoardPanel extends JPanel {
+public class BoardPanel extends JPanel implements Observer {
 	private static final long serialVersionUID = 1L;
 	private static final Dimension BOARD_PANEL_SIZE = new Dimension(500, 500);
 	private static final Color BACKGROUND_COLOR = Color.decode("#fdcf6f");
@@ -64,12 +66,24 @@ public class BoardPanel extends JPanel {
 		}
 	}
 	
+	private void moveAndBoderClear() {
+		move.clear();
+		clearHighlightBorder();
+	}
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		//Notify by Board.makeMove()
+		tileUpdate();
+	}
+	
 	private void tileUpdate() {
 		removeAll();
 		addTilePanel();
 		validate();
 		repaint();
 	}
+	
 	
 	
 	/** Tile Panel inner class */
@@ -114,36 +128,26 @@ public class BoardPanel extends JPanel {
 			addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
 					if(SwingUtilities.isRightMouseButton(e)) {
-						move.clear();
-						clearHighlightBorder();
+						moveAndBoderClear();
 					}else if(SwingUtilities.isLeftMouseButton(e)) {
 						
 						if(move.isFirstMove()) {
 							Tile clickedtile = board.getTile(position);
-							if(clickedtile.hasPiece()) {
+							if(clickedtile.hasPiece() && board.getCurrentPlayer() == clickedtile.getPiece().getPieceAlience()) {
 								highlightBorder();
 								move.setSourceTile(clickedtile);
 								move.setMovedPiece(clickedtile.getPiece());
 							}else {
-								move.clear();
-								clearHighlightBorder();
+								moveAndBoderClear();
 							}
 						}else {
 							move.setDestinationTile(board.getTile(position));
-							
 							if(move.getMovedPiece().validate(move.getDestinationTile(), board)) {
-								//board data update
 								move.getMovedPiece().setPosition(position);
-								board.getTile(position).setPiece(move.getMovedPiece());
-								board.getTile(move.getSourceTile().getPosition()).setPiece(null);
-								
-								System.out.println(board.toString());
-								
-								tileUpdate();
+								board.makeMove(move);
 							}
 							
-							move.clear();
-							clearHighlightBorder();
+							moveAndBoderClear();
 						}
 						
 					}// end leftMouseButton
@@ -157,7 +161,7 @@ public class BoardPanel extends JPanel {
 		}
 		
 		
-		
 	}
+
 	
 }

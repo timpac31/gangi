@@ -18,6 +18,7 @@ public class GameBoard {
 	private final Board board;
 	private final JFrame gameFrame;
 	private final BoardPanel boardPanel;
+	private final DisplayPanel displayPanel;
 	
 	public GameBoard() {
 		this.gameFrame = new JFrame("장기게임");
@@ -25,8 +26,12 @@ public class GameBoard {
 		this.board = new Board();
 		this.boardPanel = new BoardPanel(board);
 		this.gameFrame.add(boardPanel, BorderLayout.CENTER);
-		createMenu();
+		this.displayPanel = new DisplayPanel(board);
+		this.gameFrame.add(displayPanel, BorderLayout.EAST);		
+		this.board.addObserver(displayPanel);
+		this.board.addObserver(boardPanel);
 		
+		createMenu();		
 		this.gameFrame.setVisible(true);
 	}
 	

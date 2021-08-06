@@ -2,6 +2,7 @@ package io.timpac.engine;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Observable;
 
 import io.timpac.gui.Position;
 import io.timpac.piece.Byung;
@@ -15,12 +16,14 @@ import io.timpac.piece.Sa;
 import io.timpac.piece.Sang;
 import io.timpac.util.Uiutils;
 
-public class Board {
+public class Board extends Observable {
 	private final Map<Position, Tile> tiles = new LinkedHashMap<>(Uiutils.TOTAL_TILE_SIZE);
+	private PieceAlience currentPlayer;
 	
 	public Board() {
 		createEmptyTiles();
 		setPieceAtTile();
+		this.currentPlayer = PieceAlience.CHO;
 	}
 	
 	private void createEmptyTiles() {
@@ -66,12 +69,36 @@ public class Board {
 		this.tiles.get(Position.of(9, 7)).setPiece(new Byung(Position.of(9, 7), PieceAlience.CHO));
 	}
 	
+	public void makeMove(Move move) {
+		getTile(move.getDestinationTile().getPosition()).setPiece(move.getMovedPiece());
+		getTile(move.getSourceTile().getPosition()).setPiece(null);
+		this.currentPlayer = this.currentPlayer.opponentPlayer();
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+	public float calculateTotalScore(PieceAlience pieceAlience) {
+		float result = 0f;
+		for(Tile tile : this.tiles.values()) {
+			if(tile.hasPiece() && tile.getPiece().getPieceAlience() == pieceAlience) {
+				result += tile.getPiece().getPieceType().score();
+			}
+		}
+		
+		return result + (pieceAlience == PieceAlience.HAN ? 1.5f : 0f);
+	}
+	
 	public Tile getTile(Position position) {
 		return this.tiles.get(position) == null ? new Tile(position, null) : this.tiles.get(position);
 	}
 	
 	public Map<Position, Tile> getTiles() {
 		return this.tiles;
+	}
+	
+	public PieceAlience getCurrentPlayer() {
+		return this.currentPlayer;
 	}
 	
 	@Override
@@ -88,5 +115,6 @@ public class Board {
 		}
 		return sb.toString();
 	}
+
 
 }

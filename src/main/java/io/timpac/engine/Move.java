@@ -48,4 +48,5 @@ public class Move {
 		this.destinationTile = null;
 		this.movedPiece = null;
 	}
+	
 }
