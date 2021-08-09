@@ -18,10 +18,12 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import io.timpac.engine.Board;
+import io.timpac.engine.GameStatus;
 import io.timpac.engine.Move;
 import io.timpac.engine.Tile;
 import io.timpac.util.Uiutils;
@@ -44,7 +46,7 @@ public class BoardPanel extends JPanel implements Observer {
 		setPreferredSize(BOARD_PANEL_SIZE);
 		validate();
 	}
-
+ 
 	private void addTilePanel() {
 		for(int i=0; i<Uiutils.TOTAL_TILE_SIZE; i++) {
 			final Position currentPosition = Position.of(i % Uiutils.TILE_COLUMN_NUM + 1, i / Uiutils.TILE_COLUMN_NUM + 1); 
@@ -75,6 +77,10 @@ public class BoardPanel extends JPanel implements Observer {
 	public void update(Observable o, Object arg) {
 		//Notify by Board.makeMove()
 		tileUpdate();
+		
+		if(board.getGameStatus() == GameStatus.GAME_OVER) {
+			JOptionPane.showMessageDialog(this, board.getCurrentPlayer().opponentPlayer().title() + " 승리!!");
+		}
 	}
 	
 	private void tileUpdate() {
@@ -99,7 +105,9 @@ public class BoardPanel extends JPanel implements Observer {
 			setPreferredSize(TILE_PANEL_SIZE);
 			setBackground(BACKGROUND_COLOR);
 			setPiece();
-			addMouseEvent();
+			if(board.getGameStatus() != GameStatus.GAME_OVER) {
+				addMouseEvent();
+			}
 			
 			validate();
 		}
