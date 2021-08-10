@@ -134,7 +134,7 @@ public class Board extends Observable {
 	}
 	
 	public void makeMove(Move move) {
-		if(isGameOver(move)) {
+		if(isGameOver(move.getDestinationTile())) {
 			this.gameStatus = GameStatus.GAME_OVER;
 		}else if(this.gameStatus != GameStatus.START) {
 			this.gameStatus = GameStatus.START;
@@ -148,10 +148,10 @@ public class Board extends Observable {
 		notifyObservers();
 	}
 	
-	private boolean isGameOver(Move move) {
-		return move.getDestinationTile().hasPiece() 
-				&& move.getDestinationTile().getPiece().getPieceAlience() != this.currentPlayer 
-				&& move.getDestinationTile().getPiece().getPieceType() == PieceType.KING;
+	private boolean isGameOver(Tile destinationTile) {
+		return destinationTile.hasPiece() 
+				&& destinationTile.getPiece().getPieceAlience() != this.currentPlayer 
+				&& destinationTile.getPiece().getPieceType() == PieceType.KING;
 	}
 	
 	public float calculateTotalScore(PieceAlience pieceAlience) {
