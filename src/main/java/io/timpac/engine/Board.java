@@ -165,6 +165,11 @@ public class Board extends Observable {
 		return result + (pieceAlience == PieceAlience.HAN ? 1.5f : 0f);
 	}
 	
+	public boolean hasMyPiece(Position position) {
+		Tile tile = getTile(position);
+		return tile.hasPiece() && tile.getPiece().getPieceAlience() == this.currentPlayer; 
+	}
+	
 	public Tile getTile(Position position) {
 		return this.tiles.get(position) == null ? new Tile(position, null) : this.tiles.get(position);
 	}

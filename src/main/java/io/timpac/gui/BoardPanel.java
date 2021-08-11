@@ -30,7 +30,7 @@ import io.timpac.util.Uiutils;
 
 public class BoardPanel extends JPanel implements Observer {
 	private static final long serialVersionUID = 1L;
-	private static final Dimension BOARD_PANEL_SIZE = new Dimension(500, 500);
+	private static final Dimension BOARD_PANEL_SIZE = new Dimension(450, 500);
 	private static final Color BACKGROUND_COLOR = Color.decode("#fdcf6f");
 	private static final Dimension TILE_PANEL_SIZE = new Dimension(50,50);
 	
@@ -49,8 +49,10 @@ public class BoardPanel extends JPanel implements Observer {
  
 	private void addTilePanel() {
 		for(int i=0; i<Uiutils.TOTAL_TILE_SIZE; i++) {
-			final Position currentPosition = Position.of(i % Uiutils.TILE_COLUMN_NUM + 1, i / Uiutils.TILE_COLUMN_NUM + 1); 
-			TilePanel tilePanel = new TilePanel(currentPosition);
+			final Position currentPosition = Position.of(i % Uiutils.TILE_COLUMN_NUM + 1, i / Uiutils.TILE_COLUMN_NUM + 1);
+			TilePanel tilePanel = new TilePanel(
+					currentPosition, 
+					move.getDestinationTile() != null && move.getDestinationTile().getPosition().equals(currentPosition));
 			add(tilePanel, i);
 		}
 	}
@@ -60,7 +62,7 @@ public class BoardPanel extends JPanel implements Observer {
 		for(int i=0; i<components.length; i++) {
 			if(components[i] instanceof TilePanel) {
 				TilePanel tilePanel = (TilePanel) components[i];
-				if(tilePanel.getComponentCount() > 0) {
+				if(tilePanel.getComponentCount() > 0 && !tilePanel.isDestination) {
 					JLabel pieceIcon = (JLabel) tilePanel.getComponent(0);
 					pieceIcon.setBorder(BorderFactory.createEmptyBorder());
 				}
@@ -96,11 +98,13 @@ public class BoardPanel extends JPanel implements Observer {
 	private class TilePanel extends JPanel {
 		private static final long serialVersionUID = 1L;
 		private final Position position;
+		private final boolean isDestination;
 
-		TilePanel(Position position) {
+		TilePanel(Position position, boolean isDestination) {
 			super(new GridBagLayout());
 			
 			this.position = position;
+			this.isDestination = isDestination;
 			
 			setPreferredSize(TILE_PANEL_SIZE);
 			setBackground(BACKGROUND_COLOR);
@@ -108,7 +112,9 @@ public class BoardPanel extends JPanel implements Observer {
 			if(board.getGameStatus() != GameStatus.GAME_OVER) {
 				addMouseEvent();
 			}
-			
+			if(isDestination) {
+				highlightBorder();
+			}
 			validate();
 		}
 		
@@ -116,8 +122,39 @@ public class BoardPanel extends JPanel implements Observer {
 		protected void paintBorder(Graphics g) {
 			final Dimension d = getSize();
 			g.setColor(Color.BLACK);
+			
+			//가운데 라인
 			g.drawLine(0, d.height/2, d.width, d.height/2);
 			g.drawLine(d.width/2, 0, d.width/2, d.height);
+			
+			//궁성 대각선
+			int x = this.position.getX();
+			int y = this.position.getY();
+			if(x == 4 && (y == 1 || y == 8)) {
+				g.drawLine(d.width/2, d.height/2, d.width, d.height);
+			}else if(x == 4 && (y == 3 || y == 10)) {
+				g.drawLine(d.width/2, d.height/2, d.width, 0);
+			}else if(x == 5 && (y == 2 || y == 9)) {
+				g.drawLine(0, 0, d.width, d.height);
+				g.drawLine(0, d.height, d.width, 0);
+			}else if(x == 6 && (y == 3 || y == 10)) {
+				g.drawLine(0, 0, d.width/2, d.height/2);
+			}else if(x == 6 && (y == 1 || y == 8)) {
+				g.drawLine(0, d.height, d.width/2, d.height/2);
+			}
+			
+			//모서리 라인 삭제
+			g.setColor(BACKGROUND_COLOR);
+			if(x == 1) {
+				g.fillRect(0, 0, d.width/2, d.height);
+			}else if(x == 9) {
+				g.fillRect(d.width/2 + 1, 0, d.width/2, d.height);
+			}
+			if(y == 1) {
+				g.fillRect(0, 0, d.width, d.height/2);
+			}else if(y == 10) {
+				g.fillRect(0, d.height/2 + 1, d.width, d.height/2);
+			}
 		}
 		
 		private void setPiece() {
@@ -139,8 +176,8 @@ public class BoardPanel extends JPanel implements Observer {
 						moveAndBoderClear();
 					}else if(SwingUtilities.isLeftMouseButton(e)) {
 						
+						Tile clickedtile = board.getTile(position);
 						if(move.isFirstMove()) {
-							Tile clickedtile = board.getTile(position);
 							if(clickedtile.hasPiece() && board.getCurrentPlayer() == clickedtile.getPiece().getPieceAlience()) {
 								highlightBorder();
 								move.setSourceTile(clickedtile);
@@ -149,13 +186,19 @@ public class BoardPanel extends JPanel implements Observer {
 								moveAndBoderClear();
 							}
 						}else {
-							move.setDestinationTile(board.getTile(position));
+							move.setDestinationTile(clickedtile);
 							if(move.getMovedPiece().validate(move.getDestinationTile(), board)) {
 								move.getMovedPiece().setPosition(position);
 								board.makeMove(move);
+								move.clear();
+							}else if(board.hasMyPiece(position)) {
+								moveAndBoderClear();
+								highlightBorder();
+								move.setSourceTile(clickedtile);
+								move.setMovedPiece(clickedtile.getPiece());
+							}else {
+								moveAndBoderClear();
 							}
-							
-							moveAndBoderClear();
 						}
 						
 					}// end leftMouseButton
@@ -165,7 +208,8 @@ public class BoardPanel extends JPanel implements Observer {
 		
 		private void highlightBorder() {
 			JLabel pieceIcon = (JLabel) getComponent(0);
-			pieceIcon.setBorder(BorderFactory.createLineBorder(Color.blue));
+			pieceIcon.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+			//TODO border 오른쪽라인 안보임 bug 
 		}
 		
 		
