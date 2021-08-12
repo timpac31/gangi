@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,7 +20,7 @@ import io.timpac.engine.Board;
 import io.timpac.engine.GameStatus;
 
 public class GameBoard {
-	private static Dimension GAMEBOARD_SIZE = new Dimension(600, 600);
+	private static Dimension GAMEBOARD_SIZE = new Dimension(650, 600);
 	
 	private final Board board;
 	private final JFrame gameFrame;
@@ -121,22 +122,9 @@ public class GameBoard {
 	
 	private void createMenu() {
 		JMenuBar menubar = new JMenuBar();
-		menubar.add(createFileMenu());
 		menubar.add(newGameMenu());
+		menubar.add(createRewindButton());
 		this.gameFrame.setJMenuBar(menubar);
-	}
-
-	private JMenu createFileMenu() {
-		JMenu fileMenu = new JMenu("File");
-		JMenuItem exitItem = new JMenuItem("Exit");
-		exitItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
-		fileMenu.add(exitItem);
-		
-		return fileMenu;
 	}
 	
 	private JMenu newGameMenu() {
@@ -147,7 +135,23 @@ public class GameBoard {
 				createOptionWindow();
 			}
 		});
+		JMenuItem exitItem = new JMenuItem("Exit");
+		exitItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		menu.add(startItem);
+		menu.add(exitItem);
 		return menu;
+	}
+	
+	private JButton createRewindButton() {
+		JButton button = new JButton("무르기 ◀");
+		button.setBorder(BorderFactory.createEmptyBorder());
+		button.addActionListener(e -> {
+			board.rewindMove();
+		});
+		return button;
 	}
 }
