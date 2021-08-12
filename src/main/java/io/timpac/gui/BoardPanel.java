@@ -40,7 +40,7 @@ public class BoardPanel extends JPanel implements Observer {
 	BoardPanel(Board board) {
 		super(new GridLayout(Uiutils.TILE_ROW_NUM, Uiutils.TILE_COLUMN_NUM));
 		this.board = board;
-		this.move = new Move(null, null, null);
+		this.move = new Move(null, null, null, null);
 		
 		addTilePanel();
 		setPreferredSize(BOARD_PANEL_SIZE);
@@ -189,6 +189,7 @@ public class BoardPanel extends JPanel implements Observer {
 							move.setDestinationTile(clickedtile);
 							if(move.getMovedPiece().validate(move.getDestinationTile(), board)) {
 								move.getMovedPiece().setPosition(position);
+								move.setTargetPiece(board.getTile(position).getPiece());
 								board.makeMove(move);
 								move.clear();
 							}else if(board.hasMyPiece(position)) {
@@ -208,10 +209,8 @@ public class BoardPanel extends JPanel implements Observer {
 		
 		private void highlightBorder() {
 			JLabel pieceIcon = (JLabel) getComponent(0);
-			pieceIcon.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-			//TODO border 오른쪽라인 안보임 bug 
+			pieceIcon.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		}
-		
 		
 	}
 

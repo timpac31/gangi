@@ -3,6 +3,7 @@ package io.timpac.engine;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Observable;
+import java.util.Stack;
 
 import io.timpac.gui.Charim;
 import io.timpac.gui.Position;
@@ -22,6 +23,7 @@ public class Board extends Observable {
 	private final Map<Position, Tile> tiles = new LinkedHashMap<>(Uiutils.TOTAL_TILE_SIZE);
 	private PieceAlience currentPlayer;
 	private GameStatus gameStatus;
+	private Stack<Move> moveHistory = new Stack<>();
 	
 	public Board() {
 		initialize();
@@ -133,7 +135,7 @@ public class Board extends Observable {
 		}
 	}
 	
-	public void makeMove(Move move) {
+	public void makeMove(final Move move) {
 		if(isGameOver(move.getDestinationTile())) {
 			this.gameStatus = GameStatus.GAME_OVER;
 		}else if(this.gameStatus != GameStatus.START) {
@@ -142,6 +144,23 @@ public class Board extends Observable {
 		
 		getTile(move.getDestinationTile().getPosition()).setPiece(move.getMovedPiece());
 		getTile(move.getSourceTile().getPosition()).setPiece(null);
+		this.currentPlayer = this.currentPlayer.opponentPlayer();
+		
+		moveHistory.push(Move.newInstance(move));
+		
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void rewindMove() {
+		if(moveHistory.isEmpty()) {
+			return;
+		}
+		
+		Move lastMove = moveHistory.pop();
+		getTile(lastMove.getSourceTile().getPosition()).setPiece(lastMove.getMovedPiece());
+		lastMove.getMovedPiece().setPosition(lastMove.getSourceTile().getPosition());
+		getTile(lastMove.getDestinationTile().getPosition()).setPiece(lastMove.getTargetPiece());
 		this.currentPlayer = this.currentPlayer.opponentPlayer();
 		
 		setChanged();

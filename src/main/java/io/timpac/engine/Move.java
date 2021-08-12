@@ -6,13 +6,19 @@ public class Move {
 	private Tile sourceTile;
 	private Tile destinationTile;
 	private Piece movedPiece;
+	private Piece targetPiece;
 	
-	public final static Move EMPTY_MOVE = new Move(null, null, null);
+	public final static Move EMPTY_MOVE = new Move(null, null, null, null);
 	
-	public Move(Tile sourceTile, Tile destinationTile, Piece movedPiece) {
+	public Move(Tile sourceTile, Tile destinationTile, Piece movedPiece, Piece targetPiece) {
 		this.sourceTile = sourceTile;
 		this.destinationTile = destinationTile;
 		this.movedPiece = movedPiece;
+		this.targetPiece = targetPiece;
+	}
+	
+	public static Move newInstance(Move move) {
+		return new Move(move.getSourceTile(), move.getDestinationTile(), move.getMovedPiece(), move.getTargetPiece());
 	}
 
 	public Tile getSourceTile() {
@@ -27,6 +33,10 @@ public class Move {
 		return movedPiece;
 	}
 	
+	public Piece getTargetPiece() {
+		return targetPiece;
+	}
+	
 	public void setSourceTile(Tile sourceTile) {
 		this.sourceTile = sourceTile;
 	}
@@ -37,6 +47,10 @@ public class Move {
 
 	public void setMovedPiece(Piece movedPiece) {
 		this.movedPiece = movedPiece;
+	}
+	
+	public void setTargetPiece(Piece targetPiece) {
+		this.targetPiece = targetPiece;
 	}
 
 	public boolean isFirstMove() {
