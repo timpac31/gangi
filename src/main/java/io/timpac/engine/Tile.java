@@ -35,4 +35,9 @@ public class Tile {
 	public boolean isBlank() {
 		return this.piece == null ? true : false;
 	}
+	
+	@Override
+	public String toString() {
+		return "[position]:" + position.getX() + "," + position.getY() + " [piece]:" + (hasPiece() ? piece.name() : "empty");
+	}
 }

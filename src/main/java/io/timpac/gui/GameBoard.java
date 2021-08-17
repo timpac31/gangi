@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -123,7 +122,7 @@ public class GameBoard {
 	private void createMenu() {
 		JMenuBar menubar = new JMenuBar();
 		menubar.add(newGameMenu());
-		menubar.add(createRewindButton());
+		menubar.add(createOperationMenu());
 		this.gameFrame.setJMenuBar(menubar);
 	}
 	
@@ -146,12 +145,19 @@ public class GameBoard {
 		return menu;
 	}
 	
-	private JButton createRewindButton() {
-		JButton button = new JButton("무르기 ◀");
-		button.setBorder(BorderFactory.createEmptyBorder());
-		button.addActionListener(e -> {
+	private JMenu createOperationMenu() {
+		JMenu menu = new JMenu("동작");
+		JMenuItem rewindItem = new JMenuItem("무르기");
+		rewindItem.addActionListener(e -> {
 			board.rewindMove();
 		});
-		return button;
+		JMenuItem turnoverItem = new JMenuItem("한수 쉼");
+		turnoverItem.addActionListener(e -> {
+			board.turnOver();
+		});
+		menu.add(rewindItem);
+		menu.add(turnoverItem);
+		return menu;
 	}
+	
 }

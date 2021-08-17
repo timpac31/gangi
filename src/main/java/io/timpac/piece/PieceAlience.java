@@ -5,18 +5,22 @@ public enum PieceAlience {
 		public PieceAlience opponentPlayer() {
 			return HAN;
 		}
-		
 		public int getDisplayRow() {
 			return 2;
+		}
+		public float bonusScore() {
+			return 0f;
 		}
 	},
 	HAN("한") {
 		public PieceAlience opponentPlayer() {
 			return CHO;
 		}
-		
 		public int getDisplayRow() {
 			return 0;
+		}
+		public float bonusScore() {
+			return 1.5f;
 		}
 	};
 	
@@ -32,4 +36,5 @@ public enum PieceAlience {
 	
 	abstract public PieceAlience opponentPlayer();
 	abstract public int getDisplayRow();
+	abstract public float bonusScore();
 }

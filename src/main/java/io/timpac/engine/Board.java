@@ -173,6 +173,12 @@ public class Board extends Observable {
 				&& destinationTile.getPiece().getPieceType() == PieceType.KING;
 	}
 	
+	public void turnOver() {
+		this.currentPlayer = this.currentPlayer.opponentPlayer();
+		setChanged();
+		notifyObservers();
+	}
+	
 	public float calculateTotalScore(PieceAlience pieceAlience) {
 		float result = 0f;
 		for(Tile tile : this.tiles.values()) {
@@ -181,7 +187,7 @@ public class Board extends Observable {
 			}
 		}
 		
-		return result + (pieceAlience == PieceAlience.HAN ? 1.5f : 0f);
+		return result + pieceAlience.bonusScore();
 	}
 	
 	public boolean hasMyPiece(Position position) {
