@@ -7,132 +7,30 @@ import java.util.Stack;
 
 import io.timpac.gui.Charim;
 import io.timpac.gui.Position;
-import io.timpac.piece.Byung;
-import io.timpac.piece.Cha;
-import io.timpac.piece.King;
-import io.timpac.piece.Ma;
 import io.timpac.piece.Piece;
 import io.timpac.piece.PieceAlience;
 import io.timpac.piece.PieceType;
-import io.timpac.piece.Po;
-import io.timpac.piece.Sa;
-import io.timpac.piece.Sang;
 import io.timpac.util.Uiutils;
 
 public class Board extends Observable {
-	private final Map<Position, Tile> tiles = new LinkedHashMap<>(Uiutils.TOTAL_TILE_SIZE);
+	private Map<Position, Tile> tiles = new LinkedHashMap<>(Uiutils.TOTAL_TILE_SIZE);
 	private PieceAlience currentPlayer;
 	private GameStatus gameStatus;
 	private Stack<Move> moveHistory = new Stack<>();
 	
 	public Board() {
 		initialize();
+		this.tiles = TileSetup.createBasicTiles();
 	}
 	
 	public void initialize() {
-		createEmptyTiles();
-		setPieceAtTile();
 		this.currentPlayer = PieceAlience.CHO;
 		this.gameStatus = GameStatus.READY;
-	}
-	
-	private void createEmptyTiles() {
-		for(int i=0; i<Uiutils.TOTAL_TILE_SIZE; i++) {
-			final Position currentPosition = Position.of(i % Uiutils.TILE_COLUMN_NUM + 1, i / Uiutils.TILE_COLUMN_NUM + 1);
-			tiles.put(currentPosition, new Tile(currentPosition)); 
-		}
-	}
-	
-	private void setPieceAtTile() {
-		this.tiles.get(Position.of(1, 1)).setPiece(new Cha(Position.of(1, 1), PieceAlience.HAN));
-		this.tiles.get(Position.of(2, 1)).setPiece(new Ma(Position.of(2, 1), PieceAlience.HAN));
-		this.tiles.get(Position.of(3, 1)).setPiece(new Sang(Position.of(3, 1), PieceAlience.HAN));
-		this.tiles.get(Position.of(4, 1)).setPiece(new Sa(Position.of(4, 1), PieceAlience.HAN));
-		this.tiles.get(Position.of(6, 1)).setPiece(new Sa(Position.of(6, 1), PieceAlience.HAN));
-		this.tiles.get(Position.of(7, 1)).setPiece(new Sang(Position.of(7, 1), PieceAlience.HAN));
-		this.tiles.get(Position.of(8, 1)).setPiece(new Ma(Position.of(8, 1), PieceAlience.HAN));
-		this.tiles.get(Position.of(9, 1)).setPiece(new Cha(Position.of(9, 1), PieceAlience.HAN));
-		this.tiles.get(Position.of(5, 2)).setPiece(new King(Position.of(5, 2), PieceAlience.HAN));
-		this.tiles.get(Position.of(2, 3)).setPiece(new Po(Position.of(2, 3), PieceAlience.HAN));
-		this.tiles.get(Position.of(8, 3)).setPiece(new Po(Position.of(8, 3), PieceAlience.HAN));
-		this.tiles.get(Position.of(1, 4)).setPiece(new Byung(Position.of(1, 4), PieceAlience.HAN));
-		this.tiles.get(Position.of(3, 4)).setPiece(new Byung(Position.of(3, 4), PieceAlience.HAN));
-		this.tiles.get(Position.of(5, 4)).setPiece(new Byung(Position.of(5, 4), PieceAlience.HAN));
-		this.tiles.get(Position.of(7, 4)).setPiece(new Byung(Position.of(7, 4), PieceAlience.HAN));
-		this.tiles.get(Position.of(9, 4)).setPiece(new Byung(Position.of(9, 4), PieceAlience.HAN));
-		
-		this.tiles.get(Position.of(1, 10)).setPiece(new Cha(Position.of(1, 10), PieceAlience.CHO));
-		this.tiles.get(Position.of(2, 10)).setPiece(new Ma(Position.of(2, 10), PieceAlience.CHO));
-		this.tiles.get(Position.of(3, 10)).setPiece(new Sang(Position.of(3, 10), PieceAlience.CHO));
-		this.tiles.get(Position.of(4, 10)).setPiece(new Sa(Position.of(4, 10), PieceAlience.CHO));
-		this.tiles.get(Position.of(6, 10)).setPiece(new Sa(Position.of(6, 10), PieceAlience.CHO));
-		this.tiles.get(Position.of(7, 10)).setPiece(new Sang(Position.of(7, 10), PieceAlience.CHO));
-		this.tiles.get(Position.of(8, 10)).setPiece(new Ma(Position.of(8, 10), PieceAlience.CHO));
-		this.tiles.get(Position.of(9, 10)).setPiece(new Cha(Position.of(9, 10), PieceAlience.CHO));
-		this.tiles.get(Position.of(5, 9)).setPiece(new King(Position.of(5, 9), PieceAlience.CHO));
-		this.tiles.get(Position.of(2, 8)).setPiece(new Po(Position.of(2, 8), PieceAlience.CHO));
-		this.tiles.get(Position.of(8, 8)).setPiece(new Po(Position.of(8, 8), PieceAlience.CHO));
-		this.tiles.get(Position.of(1, 7)).setPiece(new Byung(Position.of(1, 7), PieceAlience.CHO));
-		this.tiles.get(Position.of(3, 7)).setPiece(new Byung(Position.of(3, 7), PieceAlience.CHO));
-		this.tiles.get(Position.of(5, 7)).setPiece(new Byung(Position.of(5, 7), PieceAlience.CHO));
-		this.tiles.get(Position.of(7, 7)).setPiece(new Byung(Position.of(7, 7), PieceAlience.CHO));
-		this.tiles.get(Position.of(9, 7)).setPiece(new Byung(Position.of(9, 7), PieceAlience.CHO));
+		this.moveHistory.clear();
 	}
 	
 	public void tableSetting(Charim choCharim, Charim hanCharim) {
-		switch(choCharim) {
-			case SMSM:
-				this.tiles.get(Position.of(2, 10)).setPiece(new Sang(Position.of(2, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(3, 10)).setPiece(new Ma(Position.of(3, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(7, 10)).setPiece(new Sang(Position.of(7, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(8, 10)).setPiece(new Ma(Position.of(8, 10), PieceAlience.CHO));
-				break;
-			case SMMS:
-				this.tiles.get(Position.of(2, 10)).setPiece(new Sang(Position.of(2, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(3, 10)).setPiece(new Ma(Position.of(3, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(7, 10)).setPiece(new Ma(Position.of(7, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(8, 10)).setPiece(new Sang(Position.of(8, 10), PieceAlience.CHO));
-				break;
-			case MSMS:
-				this.tiles.get(Position.of(2, 10)).setPiece(new Ma(Position.of(2, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(3, 10)).setPiece(new Sang(Position.of(3, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(7, 10)).setPiece(new Ma(Position.of(7, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(8, 10)).setPiece(new Sang(Position.of(8, 10), PieceAlience.CHO));
-				break;
-			case MSSM:
-				this.tiles.get(Position.of(2, 10)).setPiece(new Ma(Position.of(2, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(3, 10)).setPiece(new Sang(Position.of(3, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(7, 10)).setPiece(new Sang(Position.of(7, 10), PieceAlience.CHO));
-				this.tiles.get(Position.of(8, 10)).setPiece(new Ma(Position.of(8, 10), PieceAlience.CHO));
-				break;
-		}
-		
-		switch(hanCharim) {
-			case SMSM:
-				this.tiles.get(Position.of(2, 1)).setPiece(new Sang(Position.of(2, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(3, 1)).setPiece(new Ma(Position.of(3, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(7, 1)).setPiece(new Sang(Position.of(7, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(8, 1)).setPiece(new Ma(Position.of(8, 1), PieceAlience.HAN));
-				break;
-			case SMMS:
-				this.tiles.get(Position.of(2, 1)).setPiece(new Sang(Position.of(2, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(3, 1)).setPiece(new Ma(Position.of(3, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(7, 1)).setPiece(new Ma(Position.of(7, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(8, 1)).setPiece(new Sang(Position.of(8, 1), PieceAlience.HAN));
-				break;
-			case MSMS:
-				this.tiles.get(Position.of(2, 1)).setPiece(new Ma(Position.of(2, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(3, 1)).setPiece(new Sang(Position.of(3, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(7, 1)).setPiece(new Ma(Position.of(7, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(8, 1)).setPiece(new Sang(Position.of(8, 1), PieceAlience.HAN));
-				break;
-			case MSSM:
-				this.tiles.get(Position.of(2, 1)).setPiece(new Ma(Position.of(2, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(3, 1)).setPiece(new Sang(Position.of(3, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(7, 1)).setPiece(new Sang(Position.of(7, 1), PieceAlience.HAN));
-				this.tiles.get(Position.of(8, 1)).setPiece(new Ma(Position.of(8, 1), PieceAlience.HAN));
-				break;
-		}
+		this.tiles = TileSetup.getSettingTiles(choCharim, hanCharim);
 	}
 	
 	public void makeMove(final Move move) {

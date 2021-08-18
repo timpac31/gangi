@@ -208,8 +208,14 @@ public class BoardPanel extends JPanel implements Observer {
 		}
 		
 		private void highlightBorder() {
-			JLabel pieceIcon = (JLabel) getComponent(0);
-			pieceIcon.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+			try {
+				JLabel pieceIcon = (JLabel) getComponent(0);
+				pieceIcon.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+			}catch(ArrayIndexOutOfBoundsException e) {
+				setPiece();
+				JLabel pieceIcon = (JLabel) getComponent(0);
+				pieceIcon.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+			}
 		}
 		
 	}
