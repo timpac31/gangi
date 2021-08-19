@@ -2,6 +2,7 @@ package io.timpac.engine;
 
 import io.timpac.gui.Position;
 import io.timpac.piece.Piece;
+import io.timpac.piece.PieceAlience;
 
 public class Tile {
 	private final Position position;
@@ -34,6 +35,10 @@ public class Tile {
 	
 	public boolean isBlank() {
 		return this.piece == null ? true : false;
+	}
+	
+	public boolean hasMyPiece(PieceAlience pieceAlience) {
+		return hasPiece() && pieceAlience == piece.getPieceAlience();
 	}
 	
 	@Override

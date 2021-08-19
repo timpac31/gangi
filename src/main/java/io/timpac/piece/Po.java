@@ -11,7 +11,7 @@ public class Po extends Piece {
 	}
 	
 	@Override
-	public boolean validatePieceRule(Tile destinationTile, Board board) {
+	public boolean validatePieceRule(Tile destinationTile, final Board board) {
 		final Position destinationPosition = destinationTile.getPosition();
 		
 		if(this.position.getX() != destinationPosition.getX() && this.position.getY() != destinationPosition.getY()) {

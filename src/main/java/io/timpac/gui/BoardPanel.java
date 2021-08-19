@@ -174,48 +174,41 @@ public class BoardPanel extends JPanel implements Observer {
 				public void mouseClicked(MouseEvent e) {
 					if(SwingUtilities.isRightMouseButton(e)) {
 						moveAndBoderClear();
-					}else if(SwingUtilities.isLeftMouseButton(e)) {
+						return;
+					}
 						
-						Tile clickedtile = board.getTile(position);
-						if(move.isFirstMove()) {
-							if(clickedtile.hasPiece() && board.getCurrentPlayer() == clickedtile.getPiece().getPieceAlience()) {
-								highlightBorder();
-								move.setSourceTile(clickedtile);
-								move.setMovedPiece(clickedtile.getPiece());
-							}else {
-								moveAndBoderClear();
-							}
+					Tile clickedtile = board.getTile(position);
+					if(move.isFirstMove()) {
+						if(clickedtile.hasMyPiece(board.getCurrentPlayer())) {
+							highlightBorder();
+							move.setSourceTile(clickedtile);
+							move.setMovedPiece(clickedtile.getPiece());
 						}else {
-							move.setDestinationTile(clickedtile);
-							if(move.getMovedPiece().validate(move.getDestinationTile(), board)) {
-								move.getMovedPiece().setPosition(position);
-								move.setTargetPiece(board.getTile(position).getPiece());
-								board.makeMove(move);
-								move.clear();
-							}else if(board.hasMyPiece(position)) {
-								moveAndBoderClear();
-								highlightBorder();
-								move.setSourceTile(clickedtile);
-								move.setMovedPiece(clickedtile.getPiece());
-							}else {
-								moveAndBoderClear();
-							}
+							moveAndBoderClear();
 						}
-						
-					}// end leftMouseButton
+					}else {
+						move.setDestinationTile(clickedtile);
+						if(move.getMovedPiece().validate(move.getDestinationTile(), board)) {
+							move.getMovedPiece().setPosition(position);
+							move.setTargetPiece(clickedtile.getPiece());
+							board.makeMove(move);
+							move.clear();
+						}else if(board.hasMyPiece(position)) {
+							moveAndBoderClear();
+							highlightBorder();
+							move.setSourceTile(clickedtile);
+							move.setMovedPiece(clickedtile.getPiece());
+						}else {
+							moveAndBoderClear();
+						}
+					}
 				}
 			});
 		}
 		
 		private void highlightBorder() {
-			try {
-				JLabel pieceIcon = (JLabel) getComponent(0);
-				pieceIcon.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-			}catch(ArrayIndexOutOfBoundsException e) {
-				setPiece();
-				JLabel pieceIcon = (JLabel) getComponent(0);
-				pieceIcon.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-			}
+			JLabel pieceIcon = (JLabel) getComponent(0);
+			pieceIcon.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		}
 		
 	}

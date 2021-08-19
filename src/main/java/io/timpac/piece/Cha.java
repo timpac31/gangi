@@ -11,7 +11,7 @@ public class Cha extends Piece {
 	}
 	
 	@Override
-	public boolean validatePieceRule(Tile destinationTile, Board board) {
+	public boolean validatePieceRule(Tile destinationTile, final Board board) {
 		Position destinationPosition = destinationTile.getPosition();
 		
 		//대각선 움직임 

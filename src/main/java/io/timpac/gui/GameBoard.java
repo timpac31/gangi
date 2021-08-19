@@ -2,8 +2,6 @@ package io.timpac.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
 import javax.swing.ButtonGroup;
@@ -16,7 +14,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButton;
 
 import io.timpac.engine.Board;
-import io.timpac.engine.GameStatus;
 
 public class GameBoard {
 	private static Dimension GAMEBOARD_SIZE = new Dimension(650, 600);
@@ -25,27 +22,30 @@ public class GameBoard {
 	private final JFrame gameFrame;
 	private BoardPanel boardPanel;
 	private DisplayPanel displayPanel;
+	private final JFrame tableOptionFrame;
 	
 	public GameBoard() {
 		this.gameFrame = new JFrame("장기게임");
 		this.gameFrame.setSize(GAMEBOARD_SIZE);
 		this.board = new Board();
+		this.tableOptionFrame = createOptionWindow();
 		
-		createMenu();		
+		createMenu();
 		this.gameFrame.setVisible(true);
 	}
 	
 	private void start() {
+		this.gameFrame.getContentPane().removeAll();
 		this.boardPanel = new BoardPanel(board);
 		this.gameFrame.add(boardPanel, BorderLayout.CENTER);
 		this.displayPanel = new DisplayPanel(board);
-		this.gameFrame.add(displayPanel, BorderLayout.EAST);		
+		this.gameFrame.add(displayPanel, BorderLayout.EAST);
 		this.board.addObserver(displayPanel);
 		this.board.addObserver(boardPanel);
 		this.gameFrame.setVisible(true);
 	}
 	
-	private void createOptionWindow() {
+	private JFrame createOptionWindow() {
 		JFrame f = new JFrame();
 		
 		JLabel choLabel = new JLabel("초 상차림");
@@ -101,9 +101,7 @@ public class GameBoard {
 				hanCharim = Charim.MSSM;
 			}
 			
-			if(board.getGameStatus() != GameStatus.READY) {
-				board.initialize();
-			}
+			board.initialize();
 			board.tableSetting(choCharim, hanCharim);
 			start();
 			f.dispatchEvent(new WindowEvent(f, WindowEvent.WINDOW_CLOSING));
@@ -116,7 +114,13 @@ public class GameBoard {
 		f.setSize(300, 350);
 		
 		f.setLayout(null);
-		f.setVisible(true);
+		f.setVisible(false);
+		
+		return f;
+	}
+	
+	private void showOptionWindow() {
+		this.tableOptionFrame.setVisible(true);
 	}
 	
 	private void createMenu() {
@@ -129,17 +133,9 @@ public class GameBoard {
 	private JMenu newGameMenu() {
 		JMenu menu = new JMenu("Game");
 		JMenuItem startItem = new JMenuItem("New Game");
-		startItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				createOptionWindow();
-			}
-		});
+		startItem.addActionListener(e -> showOptionWindow());
 		JMenuItem exitItem = new JMenuItem("Exit");
-		exitItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		exitItem.addActionListener(e -> System.exit(0));
 		menu.add(startItem);
 		menu.add(exitItem);
 		return menu;

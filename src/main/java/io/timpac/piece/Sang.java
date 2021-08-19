@@ -15,7 +15,7 @@ public class Sang extends Piece {
 	}
 	
 	@Override
-	public boolean validatePieceRule(Tile destinationTile, Board board) {
+	public boolean validatePieceRule(Tile destinationTile, final Board board) {
 		return getAllMovePosition(board).contains(destinationTile.getPosition());
 	}
 	

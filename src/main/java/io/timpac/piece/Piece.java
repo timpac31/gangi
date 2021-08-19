@@ -30,16 +30,12 @@ public abstract class Piece {
 		this.position = position;
 	}
 	
-	public boolean validate(Tile destinationTile, Board board) {
-		if(isMyAlienceOccupied(destinationTile)) {
+	public boolean validate(Tile destinationTile, final Board board) {
+		if(destinationTile.hasMyPiece(this.pieceAlience)) {
 			return false;
 		}
 		
 		return validatePieceRule(destinationTile, board);
-	}
-	
-	private boolean isMyAlienceOccupied(Tile destinationTile) {
-		return destinationTile.hasPiece() && destinationTile.getPiece().getPieceAlience() == this.pieceAlience;
 	}
 			
 	public abstract String name();

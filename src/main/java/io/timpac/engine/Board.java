@@ -1,5 +1,6 @@
 package io.timpac.engine;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -20,13 +21,14 @@ public class Board extends Observable {
 	
 	public Board() {
 		initialize();
-		this.tiles = TileSetup.createBasicTiles();
+		this.tiles = TileSetup.getBasicTiles();
 	}
 	
 	public void initialize() {
 		this.currentPlayer = PieceAlience.CHO;
 		this.gameStatus = GameStatus.READY;
 		this.moveHistory.clear();
+		deleteObservers();
 	}
 	
 	public void tableSetting(Charim choCharim, Charim hanCharim) {
@@ -98,7 +100,7 @@ public class Board extends Observable {
 	}
 	
 	public Map<Position, Tile> getTiles() {
-		return this.tiles;
+		return Collections.unmodifiableMap(tiles);
 	}
 	
 	public PieceAlience getCurrentPlayer() {
