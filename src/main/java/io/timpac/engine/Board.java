@@ -44,12 +44,9 @@ public class Board extends Observable {
 		
 		getTile(move.getDestinationTile().getPosition()).setPiece(move.getMovedPiece());
 		getTile(move.getSourceTile().getPosition()).setPiece(null);
-		this.currentPlayer = this.currentPlayer.opponentPlayer();
 		
 		moveHistory.push(Move.newInstance(move));
-		
-		setChanged();
-		notifyObservers();
+		turnOver();
 	}
 	
 	public void rewindMove() {
@@ -61,15 +58,11 @@ public class Board extends Observable {
 		getTile(lastMove.getSourceTile().getPosition()).setPiece(lastMove.getMovedPiece());
 		lastMove.getMovedPiece().setPosition(lastMove.getSourceTile().getPosition());
 		getTile(lastMove.getDestinationTile().getPosition()).setPiece(lastMove.getTargetPiece());
-		this.currentPlayer = this.currentPlayer.opponentPlayer();
-		
-		setChanged();
-		notifyObservers();
+		turnOver();
 	}
 	
 	private boolean isGameOver(Tile destinationTile) {
-		return destinationTile.hasPiece() 
-				&& destinationTile.getPiece().getPieceAlience() != this.currentPlayer 
+		return destinationTile.hasEnemyPiece(this.currentPlayer) 
 				&& destinationTile.getPiece().getPieceType() == PieceType.KING;
 	}
 	
@@ -80,19 +73,13 @@ public class Board extends Observable {
 	}
 	
 	public float calculateTotalScore(PieceAlience pieceAlience) {
-		float result = 0f;
-		for(Tile tile : this.tiles.values()) {
-			if(tile.hasPiece() && tile.getPiece().getPieceAlience() == pieceAlience) {
-				result += tile.getPiece().getPieceType().score();
-			}
-		}
-		
-		return result + pieceAlience.bonusScore();
+		return this.tiles.values().stream()
+				.filter(tile -> tile.hasPiece() && tile.hasMyPiece(pieceAlience))
+				.reduce(pieceAlience.bonusScore(), (score, tile) -> score + tile.getPiece().getPieceType().score(), Float::sum);
 	}
 	
 	public boolean hasMyPiece(Position position) {
-		Tile tile = getTile(position);
-		return tile.hasPiece() && tile.getPiece().getPieceAlience() == this.currentPlayer; 
+		return getTile(position).hasMyPiece(this.currentPlayer);
 	}
 	
 	public Tile getTile(Position position) {

@@ -1,7 +1,7 @@
 package io.timpac.piece;
 
 public enum PieceType {
-	KING("왕", 0),	
+	KING("궁", 0),	
 	CHA("차", 13),	
 	PO("포", 7),
 	MA("마", 5),

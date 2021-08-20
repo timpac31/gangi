@@ -41,6 +41,10 @@ public class Tile {
 		return hasPiece() && pieceAlience == piece.getPieceAlience();
 	}
 	
+	public boolean hasEnemyPiece(PieceAlience pieceAlience) {
+		return hasPiece() && pieceAlience != piece.getPieceAlience();
+	}
+	
 	@Override
 	public String toString() {
 		return "[position]:" + position.getX() + "," + position.getY() + " [piece]:" + (hasPiece() ? piece.name() : "empty");

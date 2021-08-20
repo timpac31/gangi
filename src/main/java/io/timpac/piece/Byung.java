@@ -38,9 +38,4 @@ public class Byung extends Piece {
 	public String name() {
 		return "Byung";
 	}
-
-	@Override
-	public String toString() {
-		return super.toString();
-	}
 }

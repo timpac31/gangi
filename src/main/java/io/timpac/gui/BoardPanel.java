@@ -50,9 +50,7 @@ public class BoardPanel extends JPanel implements Observer {
 	private void addTilePanel() {
 		for(int i=0; i<Uiutils.TOTAL_TILE_SIZE; i++) {
 			final Position currentPosition = Position.of(i % Uiutils.TILE_COLUMN_NUM + 1, i / Uiutils.TILE_COLUMN_NUM + 1);
-			TilePanel tilePanel = new TilePanel(
-					currentPosition, 
-					move.getDestinationTile() != null && move.getDestinationTile().getPosition().equals(currentPosition));
+			TilePanel tilePanel = new TilePanel(currentPosition, move.isDestination(currentPosition));
 			add(tilePanel, i);
 		}
 	}

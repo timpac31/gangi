@@ -1,5 +1,6 @@
 package io.timpac.engine;
 
+import io.timpac.gui.Position;
 import io.timpac.piece.Piece;
 
 public class Move {
@@ -55,6 +56,10 @@ public class Move {
 
 	public boolean isFirstMove() {
 		return this.sourceTile == null;
+	}
+	
+	public boolean isDestination(Position position) {
+		return this.destinationTile != null && this.destinationTile.getPosition().equals(position);
 	}
 	
 	public void clear() {

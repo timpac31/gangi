@@ -40,4 +40,9 @@ public abstract class Piece {
 			
 	public abstract String name();
 	public abstract boolean validatePieceRule(Tile destinationTile, Board board);
+	
+	@Override
+	public String toString() {
+		return this.pieceAlience.title() + " " + this.pieceType.pieceName();
+	}
 }
