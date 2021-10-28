@@ -8,8 +8,7 @@
 
 ## RUN
 1. clone https://github.com/timpac31/gangi.git
-2. import maven project
-3. run /gangi/src/main/java/io/timpac/engine/Game.java
+2. java -jar gangi-0.0.1-SNAPSHOT.jar
 
 ## Licence
 MIT License

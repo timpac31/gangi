@@ -1,10 +1,11 @@
 package io.timpac.util;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.timpac.engine.Game;
 import io.timpac.gui.Position;
 import io.timpac.piece.Piece;
 
@@ -16,8 +17,9 @@ public class Uiutils {
 	
 	private static final Map<Position, Integer> POSITION_TO_INDEX = initializePositionToIndex();
 	
-	public static File getPieceImageFile(Piece piece) {
-		return new File(PIECE_ICON_PATH + piece.getPieceAlience().name() + "_" + piece.name() + ".png");
+	public static InputStream getPieceImageFile(Piece piece) {
+		return Game.class.getClassLoader()
+				.getResourceAsStream(PIECE_ICON_PATH + piece.getPieceAlience().name() + "_" + piece.name() + ".png");
 	}
 	
 	private static Map<Position, Integer> initializePositionToIndex() {

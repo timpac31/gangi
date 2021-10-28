@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -22,6 +21,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+
+import io.timpac.engine.Game;
 
 public class SwingTest {
 
@@ -39,7 +40,8 @@ public class SwingTest {
 		insidePanel.setBackground(Color.red);
 		
 		try {
-			BufferedImage image = ImageIO.read(new File("asset/images/HAN_King.png"));
+			//BufferedImage image = ImageIO.read(new File("asset/images/HAN_King.png"));
+			BufferedImage image = ImageIO.read(Game.class.getClassLoader().getResourceAsStream("asset/images/HAN_King.png"));
 			insidePanel.add(new JLabel(new ImageIcon(image)));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -58,7 +60,7 @@ public class SwingTest {
 		insidePanel2.setBackground(Color.blue);
 		
 		try {
-			BufferedImage image = ImageIO.read(new File("asset/images/CHO_Cha.png"));
+			BufferedImage image = ImageIO.read(Game.class.getClassLoader().getResourceAsStream("asset/images/CHO_Cha.png"));
 			insidePanel2.add(new JLabel(new ImageIcon(image)));
 		} catch (IOException e) {
 			e.printStackTrace();

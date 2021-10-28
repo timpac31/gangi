@@ -9,8 +9,8 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -158,7 +158,7 @@ public class BoardPanel extends JPanel implements Observer {
 		private void setPiece() {
 			if(board.getTile(this.position).hasPiece()) {
 				try {
-					File iconFile = Uiutils.getPieceImageFile(board.getTile(this.position).getPiece());
+					InputStream iconFile = Uiutils.getPieceImageFile(board.getTile(this.position).getPiece());
 					BufferedImage image = ImageIO.read(iconFile);
 					add(new JLabel(new ImageIcon(image)));
 				} catch (IOException e) {
